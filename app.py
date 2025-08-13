@@ -1,5 +1,5 @@
 # Import Flask and render_template from the flask module
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime 
 
@@ -23,8 +23,13 @@ class Todo(db.Model):
 ####### creatingan repr method 
         def __repr__(self) -> str:
             return f"{self.sno} - {self.title}"
-@app.route('/')
+@app.route('/', methods = ["GET", "POST"])
 def home():
+    if request.method == "POST":
+         print("post")
+        # If the request method is POST, it means the form was submitted
+        # Here you would typically handle form data, e.g., save it to the database
+        
     # Create an instance of the Todo model (a single todo item)
     # This will have title = "First Todo" and description = "Start investing in stock market"
     todo = Todo(title="First Todo", desc="Start investing in stock market")
@@ -42,10 +47,13 @@ def home():
     #return render_template("index.html")
 
 # Define another route '/pro' for testing or another page
-@app.route("/pro")
-def pro():
+@app.route('/show')
+def products():
+    allTodo = Todo.query.all()
+    print(allTodo)
+    # Render the 'products.html' template with the list of all todo items
     # This route simply returns a plain text response
-    return "prod page is this"
+    return render_template("index.html", allTodo=allTodo)
 
 # Check if this file is being run directly (not imported)
 if __name__ == "__main__":
