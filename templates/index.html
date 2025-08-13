@@ -17,7 +17,7 @@
         <a class="navbar-brand" href="#">MyTodoist</a>
         <button
           class="navbar-toggler"
-          type="button"
+          type="button" 
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent"
@@ -80,6 +80,8 @@
     <!--   conatiner  -->
     <div class="container my-3">
       <h2>Add a Todo</h2>
+      <!--  adding a form action -->
+        <form action="/" method="POST"></form>
       <form>
         <div class="mb-3">
           <label for="Title" class="form-label"
@@ -147,18 +149,23 @@
         <thead>
           <tr>
             <th scope="col">SNo</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Time</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+          <!-- this is a jinja for loop -->
+          {% for todo in allTodo %}
+            <tr>
+              <!--  count rows from datat base  -->
+            <th scope="row">{{loop.index}}</th>
+            <td>{{todo.title}}</td>
+            <td>{{todo.desc}}</td>
+            <td>{{todo.date_created}}</td>
           </tr>
+          {% endfor %}
+          
           <tr>
             <th scope="row">2</th>
             <td>Jacob</td>
@@ -174,7 +181,6 @@
         </tbody>
       </table>
     </div>
-    <strong>warning!</strong> warning that need attention </br>
-    <!-- new line of data changed is shown by green line -->
+   
   </body>
 </html>
