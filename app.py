@@ -1,67 +1,50 @@
 # Import Flask and render_template from the flask module
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime 
 
 # Create an instance of the Flask class (the web app)
 app = Flask(__name__)
 
-## initialiinf alschemy 
+# Initialize SQLAlchemy 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-## it is usde for signal emmiting 
 db = SQLAlchemy(app)
 
-
-## defining the schema of database 
+# Defining the schema of database 
 class Todo(db.Model):
-        sno = db.Column(db.Integer, primary_key = True)
-        title  = db.Column(db.String(200), nullable = False)
-        desc = db.Column(db.String(500), nullable = False)
-        date_created = db.Column(db.DateTime, default = datetime.utcnow)
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    desc = db.Column(db.String(500), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
-####### creatingan repr method 
-        def __repr__(self) -> str:
-            return f"{self.sno} - {self.title}"
-@app.route('/', methods = ["GET", "POST"])
+    def __repr__(self) -> str:
+        return f"{self.sno} - {self.title}"
+
+# Create the database if it doesn't exist
+with app.app_context():
+    db.create_all()
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    if request.method == "POST":
-         print("post")
-        # If the request method is POST, it means the form was submitted
-        # Here you would typically handle form data, e.g., save it to the database
-        
-    # Create an instance of the Todo model (a single todo item)
-    # This will have title = "First Todo" and description = "Start investing in stock market"
-    todo = Todo(title="First Todo", desc="Start investing in stock market")
-    
-    # Add the new todo instance to the current database session
-    db.session.add(todo)
-    
-    # Commit the session so the change is actually written to the database
-    db.session.commit()
-    
-    # Successfully committed the changes, now render the index.html template
-    return render_template('index.html')
+    if request.method == 'POST':
+        title = request.form['title']
+        desc = request.form['desc']
 
-    # This will render 'index.html' from the 'templates/' folder
-    #return render_template("index.html")
+        # Create a new Todo entry
+        todo = Todo(title=title, desc=desc)
+        db.session.add(todo)
+        db.session.commit()
 
-# Define another route '/pro' for testing or another page
+    # Always fetch all todos for rendering
+    allTodo = Todo.query.all()
+    return render_template('index.html', allTodo=allTodo) 
+
 @app.route('/show')
 def products():
     allTodo = Todo.query.all()
     print(allTodo)
-    # Render the 'products.html' template with the list of all todo items
-    # This route simply returns a plain text response
     return render_template("index.html", allTodo=allTodo)
 
-# Check if this file is being run directly (not imported)
 if __name__ == "__main__":
-    # Run the app in debug mode (auto reloads on changes + shows errors)
     app.run(debug=True)
-
-## now creating a data  base 
-## we have to  tell that what we need tos  store to flask and it will handle it 
-
-## by installing flask sequel alchmi 
-## it is an orm mapper 

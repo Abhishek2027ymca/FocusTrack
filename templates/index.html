@@ -14,7 +14,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">MyTodoist</a>
+        <a class="navbar-brand" href="/">MyTodoist</a>
         <button
           class="navbar-toggler"
           type="button" 
@@ -81,8 +81,8 @@
     <div class="container my-3">
       <h2>Add a Todo</h2>
       <!--  adding a form action -->
-        <form action="/" method="POST"></form>
-      <form>
+        
+      <form action="/" method="POST">
         <div class="mb-3">
           <label for="Title" class="form-label"
             >Todo Title</label
@@ -90,6 +90,7 @@
           <input
             type="text"
             class="form-control"
+            name ="title"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
           />
@@ -101,6 +102,7 @@
           <input
             type="text"
             class="form-control"
+            name ="desc"
             id="desc"
           />
         </div>
@@ -156,16 +158,14 @@
         </thead>
         <tbody>
           <!-- this is a jinja for loop -->
-          {% for todo in allTodo %}
-            <tr>
-              <!--  count rows from datat base  -->
-            <th scope="row">{{loop.index}}</th>
-            <td>{{todo.title}}</td>
-            <td>{{todo.desc}}</td>
-            <td>{{todo.date_created}}</td>
-          </tr>
-          {% endfor %}
-          
+         {% for todo in allTodo %}
+<tr>
+    <th scope="row">{{ loop.index }}</th>
+    <td>{{ todo.title }}</td>
+    <td>{{ todo.desc }}</td>
+    <td>{{ todo.date_created }}</td>
+</tr>
+{% endfor %}
           <tr>
             <th scope="row">2</th>
             <td>Jacob</td>
