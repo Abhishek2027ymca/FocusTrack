@@ -3,35 +3,72 @@
 {% block body %}
 <div class="container my-3">
     <h2>Add a Todo</h2>
-    <form action="/" method="POST">
-        <div class="mb-3">
+    <form action="/" method="POST" class="row g-3">
+        <div class="col-md-4">
             <label for="title" class="form-label">Todo Title</label>
             <input type="text" class="form-control" name="title" id="title" required>
         </div>
-        <div class="mb-3">
+        <div class="col-md-4">
             <label for="desc" class="form-label">Todo Description</label>
             <input type="text" class="form-control" name="desc" id="desc" required>
         </div>
-        <button type="submit" class="btn btn-dark">Add Todo</button>
+        <div class="col-md-2">
+            <label for="due_date" class="form-label">Due Date</label>
+            <input type="date" class="form-control" name="due_date" id="due_date">
+        </div>
+        <div class="col-md-2">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" name="category" id="category">
+                <option value="">Select</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="priority" class="form-label">Priority</label>
+            <select class="form-select" name="priority" id="priority">
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-dark w-100">Add Todo</button>
+        </div>
     </form>
     <hr>
     <h2>Your Todos</h2>
-    <table class="table">
+    <table class="table table-hover align-middle">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Completed</th>
                 <th scope="col">Date Created</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for todo in allTodo %}
-            <tr>
+            <tr {% if todo.completed %}style="text-decoration:line-through;opacity:0.6;"{% endif %}
+                {% if todo.due_date and todo.due_date < now() %}class="table-danger"{% endif %}>
                 <th scope="row">{{ todo.sno }}</th>
                 <td>{{ todo.title }}</td>
                 <td>{{ todo.desc }}</td>
+                <td>{% if todo.due_date %}{{ todo.due_date.strftime('%Y-%m-%d') }}{% else %}-{% endif %}</td>
+                <td>{{ todo.category or '-' }}</td>
+                <td>
+                    <span class="badge bg-{% if todo.priority=='High' %}danger{% elif todo.priority=='Low' %}secondary{% else %}warning text-dark{% endif %}">{{ todo.priority }}</span>
+                </td>
+                <td>
+                    <input type="checkbox" disabled {% if todo.completed %}checked{% endif %}>
+                </td>
                 <td>{{ todo.date_created.strftime('%Y-%m-%d %H:%M') }}</td>
                 <td>
                     <a href="/update/{{ todo.sno }}" class="btn btn-sm btn-primary">Update</a>
